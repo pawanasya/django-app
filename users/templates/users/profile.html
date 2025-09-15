@@ -1,0 +1,20 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+<div class="container">
+  <div class="card">
+    <h2>My Profile</h2>
+    <form>
+      <label>Full Name</label>
+      <input type="text" value="John Doe" required>
+
+      <label>Email</label>
+      <input type="email" value="john@example.com" required>
+
+      <label>Phone</label>
+      <input type="text" value="+91-9876543210">
+
+      <button type="submit">Update Profile</button>
+      <p><a href="{% url 'change_password' %}">Change Password</a></p>
+    </form>
+  </div>
+</div>

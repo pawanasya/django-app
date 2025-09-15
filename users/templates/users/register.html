@@ -1,0 +1,23 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+<div class="container">
+  <div class="card">
+    <h2>Create Account</h2>
+    <form>
+      <label>Full Name</label>
+      <input type="text" placeholder="Enter full name" required>
+
+      <label>Email</label>
+      <input type="email" placeholder="Enter email" required>
+
+      <label>Password</label>
+      <input type="password" placeholder="Enter password" required>
+
+      <label>Confirm Password</label>
+      <input type="password" placeholder="Re-enter password" required>
+
+      <button type="submit">Register</button>
+      <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    </form>
+  </div>
+</div>
