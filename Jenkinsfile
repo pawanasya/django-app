@@ -85,7 +85,8 @@ pipeline {
                         --network ${NETWORK_NAME} \
                         --env-file .env \
                         -p 8001:8000 \
-                        ${IMAGE_NAME}:latest
+                        ${IMAGE_NAME}:latest \
+                        sh -c "sleep 15 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
                     """
                 }
             }
