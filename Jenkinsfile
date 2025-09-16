@@ -42,7 +42,7 @@ pipeline {
         stage('Deploy Locally') {
             steps {
                 script {
-                    // पुराना container stop/remove
+                    // पुराना container stop/remove 
                     sh "docker rm -f ${CONTAINER_NAME} || true"
 
                     // नया container run
