@@ -2,7 +2,7 @@
 echo "Waiting for MySQL..."
 
 # Use pymysql in a separate Python script for clarity
-while ! python check_mysql.py; do
+while ! python /app/check_mysql.py; do
     echo "Waiting for MySQL..."
     sleep 5
 done

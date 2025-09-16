@@ -31,5 +31,6 @@ EXPOSE 8000
 
 # Entrypoint
 COPY entrypoint.sh /entrypoint.sh
+COPY check_mysql.py /app/check_mysql.py
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
