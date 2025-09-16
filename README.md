@@ -133,3 +133,4 @@ Steps to setup CI/CD using Jenkins:
 8. In django-app create jenkinsfile and mentions all stages to check 
 9. check required file permissions to read .env of files and folder
 10. now push the code and check on jenkins to create auto build generate after kill old build
+
