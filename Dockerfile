@@ -30,11 +30,4 @@ COPY . /app/
 EXPOSE 8000
 
 # Run server with wait-for-MySQL
-CMD ["sh", "-c", "\
-    until mysqladmin ping -h $DB_HOST -u$DB_USER -p$DB_PASSWORD --silent; do \
-        echo 'Waiting for MySQL to be ready...'; \
-        sleep 5; \
-    done; \
-    python manage.py migrate; \
-    python manage.py runserver 0.0.0.0:8000 \
-"]
+CMD ["sh", "-c", "sleep 20 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
