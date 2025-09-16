@@ -85,7 +85,7 @@ DATABASES = {
         'PORT': config("DB_PORT", default="3306"),
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            "ssl": {'disabled': True},   # SSL disabled
+            'ssl_disabled': True,   # SSL disabled
         }
     }
 }

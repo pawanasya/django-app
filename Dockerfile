@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     libmariadb-dev \
     build-essential \
-    default-mysql-client \
+    mariadb-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Install pipenv or pip packages
