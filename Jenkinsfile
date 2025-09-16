@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME      = "django-app"
-        DJANGO_CONTAINER= "django_app"
+        IMAGE_NAME = "django-app"
+        DJANGO_CONTAINER = "django_app"
         MYSQL_CONTAINER = "mysql_db"
-        NETWORK_NAME    = "django-net"
-        PATH            = "/usr/local/bin:$PATH"
+        NETWORK_NAME = "django-net"
+        PATH = "/usr/local/bin:$PATH"
     }
 
     stages {
@@ -50,7 +50,8 @@ pipeline {
                         -e MYSQL_DATABASE=django_auth \
                         -e MYSQL_USER=django \
                         -e MYSQL_PASSWORD=djangopass \
-                        mysql:8.0
+                        -e MYSQL_ROOT_HOST=% \
+                        mysql:8.0 --default-authentication-plugin=mysql_native_password
                     """
                 }
             }
