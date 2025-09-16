@@ -86,7 +86,14 @@ pipeline {
                         --env-file .env \
                         -p 8001:8000 \
                         ${IMAGE_NAME}:latest \
-                        sh -c "sleep 15 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+                        sh -c '
+                        until mysqladmin ping -h ${MYSQL_CONTAINER} -u django -pdjangopass --silent; do
+                            echo "Waiting for MySQL to be ready..."
+                            sleep 5
+                        done
+                        python manage.py migrate
+                        python manage.py runserver 0.0.0.0:8000
+                        '
                     """
                 }
             }
