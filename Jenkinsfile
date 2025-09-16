@@ -79,26 +79,13 @@ pipeline {
         stage('Deploy Django Container') {
             steps {
                 script {
-                    // Old container cleanup
                     sh "docker rm -f ${DJANGO_CONTAINER} || true"
-
-                    // Start Django container with wait-for-MySQL
                     sh """
                         docker run -d --name ${DJANGO_CONTAINER} \
                         --network ${NETWORK_NAME} \
                         --env-file .env \
                         -p 8001:8000 \
-                        ${IMAGE_NAME}:latest \
-                        sh -c '
-                            echo "Waiting for MySQL to be ready..."
-                            until mysqladmin ping -h "\$DB_HOST" -u"\$DB_USER" -p"\$DB_PASSWORD" --silent; do
-                                sleep 5
-                            done
-                            echo "MySQL is ready. Running migrations..."
-                            python manage.py migrate
-                            echo "Starting Django server..."
-                            python manage.py runserver 0.0.0.0:8000
-                        '
+                        ${IMAGE_NAME}:latest
                     """
                 }
             }
