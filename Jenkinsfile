@@ -64,12 +64,12 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            // Container cleanup ताकि Jenkins agent साफ रहे
-            sh "docker rm -f ${CONTAINER_NAME} || true"
-        }
-    }
+    // post {
+    //     always {
+    //         // Container cleanup ताकि Jenkins agent साफ रहे
+    //         sh "docker rm -f ${CONTAINER_NAME} || true"
+    //     }
+    // }
 }
 
 

@@ -105,3 +105,31 @@ http://<EC2-Public-IP>:8001
 
 Now your project will work both locally & on AWS staging with Docker.
 
+--------------------------------------------------------------------------------------------------------
+
+Steps to setup Docker for django-app
+1. install docker and docker desktop
+2. check docker —version
+3. create Dockerfile for docker configuration
+4. create docker-compose.yml file for create container for django-app and mysql-db container with proper healthcheck to remove conflicts
+5. check with docker compose up
+
+Steps to setup on github for django-app repo:
+1. generate GAT for jenkins credentails to access github repo
+2. generate github webhook and add jenkins server url
+3. In case of localhost generate public url using ngrok install
+4. ngrok login and generate auth token first
+5. ngrok http 8080 and generate public url for jenkins localhost port
+6. now attach this url to github webhook
+
+Steps to setup CI/CD using Jenkins:
+1. install java jdk, install jenkins
+2. generate admin password
+3. login
+4. install required plugins github, GitHub Integration plugin etc.
+5. configure .env credentials and github credentials to jenkins manage credentials
+6. create pipeline for django-app
+7. configure webhook in pipeline
+8. In django-app create jenkinsfile and mentions all stages to check 
+9. check required file permissions to read .env of files and folder
+10. now push the code and check on jenkins to create auto build generate after kill old build
