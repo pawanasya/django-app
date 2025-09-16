@@ -105,7 +105,7 @@ http://<EC2-Public-IP>:8001
 
 Now your project will work both locally & on AWS staging with Docker.
 
----------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------
 
 Steps to setup Docker for django-app
 1. install docker and docker desktop
