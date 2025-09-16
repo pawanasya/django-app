@@ -17,9 +17,8 @@ pipeline {
 
         stage('Load Env File') {
             steps {
-                sh 'chmod 777 .'
                 withCredentials([file(credentialsId: 'django-env-file', variable: 'ENV_FILE')]) {
-                    sh 'cp $ENV_FILE .env'
+                    sh 'cp $ENV_FILE $WORKSPACE/.env'
                 }
             }
         }
