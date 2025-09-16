@@ -3,7 +3,9 @@ pipeline {
 
     environment {
         IMAGE_NAME = "django-app"
-        CONTAINER_NAME = "django_app"
+        DJANGO_CONTAINER = "django_app"
+        MYSQL_CONTAINER = "mysql_db"
+        NETWORK_NAME = "django-net"
         PATH = "/usr/local/bin:$PATH"
     }
 
@@ -31,7 +33,30 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Create Docker Network') {
+            steps {
+                sh "docker network create ${NETWORK_NAME} || true"
+            }
+        }
+
+        stage('Run MySQL Container') {
+            steps {
+                script {
+                    sh """
+                        docker rm -f ${MYSQL_CONTAINER} || true
+                        docker run -d --name ${MYSQL_CONTAINER} \
+                        --network ${NETWORK_NAME} \
+                        -e MYSQL_ROOT_PASSWORD=root \
+                        -e MYSQL_DATABASE=django_auth \
+                        -e MYSQL_USER=django \
+                        -e MYSQL_PASSWORD=djangopass \
+                        mysql:8.0
+                    """
+                }
+            }
+        }
+
+        stage('Build Django Image') {
             steps {
                 script {
                     sh "docker build -t ${IMAGE_NAME}:latest ."
@@ -42,35 +67,34 @@ pipeline {
         stage('Run Tests in Container') {
             steps {
                 script {
-                    sh "docker run --rm --env-file .env ${IMAGE_NAME}:latest python manage.py test"
+                    sh """
+                        docker run --rm --network ${NETWORK_NAME} \
+                        --env-file .env \
+                        ${IMAGE_NAME}:latest python manage.py test
+                    """
                 }
             }
         }
 
-        stage('Deploy Locally') {
+        stage('Deploy Django Container') {
             steps {
                 script {
-                    // पुराना container stop/remove
-                    sh "docker rm -f ${CONTAINER_NAME} || true"
-
-                    // नया container run
+                    sh "docker rm -f ${DJANGO_CONTAINER} || true"
                     sh """
-                        docker run -d --name ${CONTAINER_NAME} \
+                        docker run -d --name ${DJANGO_CONTAINER} \
+                        --network ${NETWORK_NAME} \
                         --env-file .env \
-                        -p 8001:8000 ${IMAGE_NAME}:latest
+                        -p 8001:8000 \
+                        ${IMAGE_NAME}:latest
                     """
                 }
             }
         }
     }
 
-    // post {
-    //     always {
-    //         // Container cleanup ताकि Jenkins agent साफ रहे
-    //         sh "docker rm -f ${CONTAINER_NAME} || true"
-    //     }
-    // }
-    
+    post {
+        always {
+            echo "Pipeline finished. Django should be running on http://localhost:8001"
+        }
+    }
 }
-
-
