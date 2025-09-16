@@ -21,6 +21,7 @@ pipeline {
         stage('Load Env File') {
             steps {
                 withCredentials([file(credentialsId: 'django-env-file', variable: 'ENV_FILE')]) {
+                    // Copy .env into workspace
                     sh 'cp $ENV_FILE $WORKSPACE/.env'
                 }
             }
@@ -69,7 +70,7 @@ pipeline {
                 script {
                     sh """
                         docker run --rm --network ${NETWORK_NAME} \
-                        --env-file .env \
+                        --env-file $WORKSPACE/.env \
                         ${IMAGE_NAME}:latest python manage.py test
                     """
                 }
@@ -79,19 +80,23 @@ pipeline {
         stage('Deploy Django Container') {
             steps {
                 script {
+                    // Remove old container if exists
                     sh "docker rm -f ${DJANGO_CONTAINER} || true"
+
+                    // Run Django container with MySQL wait loop
                     sh """
                         docker run -d --name ${DJANGO_CONTAINER} \
                         --network ${NETWORK_NAME} \
-                        --env-file .env \
+                        --env-file $WORKSPACE/.env \
                         -p 8001:8000 \
                         ${IMAGE_NAME}:latest \
                         sh -c '
-                            until mysqladmin ping -h "\$DB_HOST" -u"\$DB_USER" -p"\$DB_PASSWORD" --silent; do
+                            until mysqladmin ping -h \\\$DB_HOST -u\\\$DB_USER -p\\\$DB_PASSWORD --silent; do
                                 echo "Waiting for MySQL to be ready..."
                                 sleep 5
                             done
-                            python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+                            python manage.py migrate
+                            python manage.py runserver 0.0.0.0:8000
                         '
                     """
                 }
