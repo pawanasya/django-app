@@ -87,12 +87,11 @@ pipeline {
                         -p 8001:8000 \
                         ${IMAGE_NAME}:latest \
                         sh -c '
-                        until mysqladmin ping -h ${MYSQL_CONTAINER} -u django -pdjangopass --silent; do
-                            echo "Waiting for MySQL to be ready..."
-                            sleep 5
-                        done
-                        python manage.py migrate
-                        python manage.py runserver 0.0.0.0:8000
+                            until mysqladmin ping -h "$DB_HOST" -u"$DB_USER" -p"$DB_PASSWORD" --silent; do
+                                echo "Waiting for MySQL to be ready..."
+                                sleep 5
+                            done
+                            python manage.py migrate && python manage.py runserver 0.0.0.0:8000
                         '
                     """
                 }
