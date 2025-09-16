@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "django-app"
         CONTAINER_NAME = "django_app"
+        PATH = "/usr/local/bin:$PATH"
     }
 
     stages {
@@ -20,6 +21,13 @@ pipeline {
                 withCredentials([file(credentialsId: 'django-env-file', variable: 'ENV_FILE')]) {
                     sh 'cp $ENV_FILE $WORKSPACE/.env'
                 }
+            }
+        }
+
+        stage('Check Docker') {
+            steps {
+                sh 'docker --version'
+                sh 'docker ps'
             }
         }
 
